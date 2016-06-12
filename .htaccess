@@ -1,0 +1,19 @@
+<IfModule mod_rewrite.c>
+
+	# Suponiendo que el listado de directorios esté desactivado, permitimos indexación y activamos el rewrite
+	Options +FollowSymLinks -Indexes
+	RewriteEngine on
+
+	RewriteCond $1 !^(index/.php|resources|robots\.txt)
+
+ 	# con esta instrucción bloqueamos el acceso a la carpeta system, si es que se encuentra en el directorio web
+    RedirectMatch 403 ^/(system).*$
+
+	# Antes de redireccionar, se verifica que la petición no sea a un directorio o archivo existente
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+
+	# Si el archivo/directorio no existe, redireccionamos
+	RewriteRule ^(.*)$ index.php/$1 [L]
+
+</IfModule>
